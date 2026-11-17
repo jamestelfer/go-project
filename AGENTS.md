@@ -72,7 +72,7 @@ Use Conventional Commits for all commit messages and PR titles. `pr-title.yml` e
 
 ## Releases
 
-release-please opens a release PR from Conventional Commits on `main`. Merging it creates a draft release and pushes the `v*` tag; `release.yml` then runs the shared chinmina GoReleaser workflow, which builds the matrix, attests provenance and publishes the draft. Both workflows mint keyless tokens through octo-sts, against the `release-please-go-project` and `release-go-project` trust policies in `jamestelfer/.github`.
+release-please opens a release PR from Conventional Commits on `main`. Merging it creates a draft release and pushes the `v*` tag; `release.yml` then runs the shared chinmina GoReleaser workflow, which builds the matrix, attests provenance, publishes the draft, and commits the Homebrew cask to `jamestelfer/homebrew-tap` and the Nix recipe to `jamestelfer/nixpkgs`. The workflows mint keyless tokens through octo-sts, against the `release-please-go-project`, `release-go-project` and `release-tap` trust policies in `jamestelfer/.github`. Repository configuration follows `docs/reference/repository-configuration.md` in `chinmina/.github`.
 
 ## Major dependencies
 
