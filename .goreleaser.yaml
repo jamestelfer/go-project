@@ -1,7 +1,8 @@
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json
 version: 2
 
-# Names the archives. Without it, goreleaser uses the repository name.
+# Names the archives, cask, and Nix package. Without it, goreleaser uses the
+# repository name.
 project_name: go-project
 
 builds:
@@ -25,6 +26,8 @@ builds:
       - amd64
       - arm64
 
+# The release workflow attests every file listed here. Keep the name stable:
+# the workflow reads dist/checksums.txt.
 checksum:
   name_template: "checksums.txt"
 
@@ -51,3 +54,44 @@ release:
   replace_existing_artifacts: true
   mode: keep-existing # keep the release-please title and notes
   prerelease: auto
+
+homebrew_casks:
+  - name: go-project
+    repository:
+      owner: jamestelfer
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_GITHUB_TOKEN }}" # set by the release workflow
+    # Leave the committer unset, so GitHub signs the commit as the token's App.
+    commit_author:
+      use_github_app_token: true
+    # prerelease: auto marks the release only. This stops the cask being
+    # pushed for a prerelease tag.
+    skip_upload: auto
+    homepage: "https://github.com/jamestelfer/go-project"
+    description: "Go command line project"
+    # Clear the macOS quarantine attribute so the binary runs without a
+    # Gatekeeper prompt. hooks.post.install would emit the deprecated
+    # `postflight` stanza, so custom_block carries `postflight_steps` until
+    # goreleaser ships hooks.post.install_steps (goreleaser/goreleaser#6873).
+    # `{{ "{{staged_path}}" }}` renders as Homebrew's `{{staged_path}}` token.
+    custom_block: |
+      postflight_steps do
+        on_macos do
+          run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{ "{{staged_path}}" }}/go-project"]
+        end
+      end
+
+nix:
+  - name: go-project
+    repository:
+      owner: jamestelfer
+      name: nixpkgs
+      token: "{{ .Env.NIX_GITHUB_TOKEN }}" # set by the release workflow
+    # Leave the committer unset, so GitHub signs the commit as the token's App.
+    commit_author:
+      use_github_app_token: true
+    skip_upload: auto # no recipe for prerelease tags
+    homepage: "https://github.com/jamestelfer/go-project"
+    description: "Go command line project"
+    license: "asl20"
+    # No main_program or formatter: binst 0.12.0 rejects both.

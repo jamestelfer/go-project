@@ -15,9 +15,12 @@ gh attestation verify go-project_linux_amd64.tar.gz --repo jamestelfer/go-projec
   --signer-workflow chinmina/.github/.github/workflows/goreleaser-release.yml
 ```
 
-To build from source:
+Install with any of:
 
 ```sh
+mise use -g github:jamestelfer/go-project
+brew install jamestelfer/tap/go-project
+nix profile install github:jamestelfer/nixpkgs#go-project
 go install github.com/jamestelfer/go-project/cmd/cli@latest
 ```
 
