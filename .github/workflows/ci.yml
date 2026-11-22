@@ -33,7 +33,7 @@ jobs:
 
       # No go-version/go-version-file: setup-go then installs nothing and only
       # wires the module and build caches around the toolchain mise put on PATH.
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      - uses: actions/setup-go@d8cbb8045d7f43706b9177cceb36c1f91a6644d5 # v7.1.0
         with:
           cache-dependency-path: go.sum
 
@@ -63,7 +63,7 @@ jobs:
 
       # .golangci.yaml carries no Go dependencies; it is here only to fork this
       # key from the test matrix's, which would otherwise win the race to save.
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      - uses: actions/setup-go@d8cbb8045d7f43706b9177cceb36c1f91a6644d5 # v7.1.0
         with:
           cache-dependency-path: |
             go.sum
